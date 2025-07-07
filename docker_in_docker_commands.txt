@@ -1,0 +1,17 @@
+# Pull the official Docker-in-Docker image
+docker pull docker:dind
+
+# Run the Docker-in-Docker container
+docker run --privileged -d --name dind-test docker:dind
+
+# Access the running DIND container shell
+docker exec -it dind-test sh
+
+# Inside the container, use Docker commands normally
+docker info
+docker run hello-world
+
+# To stop and remove the DIND container
+docker stop dind-test
+docker rm dind-test
+
