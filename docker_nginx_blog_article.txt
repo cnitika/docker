@@ -1,0 +1,84 @@
+🧪 Running NGINX in Docker — A Beginner-Friendly Guide to Containerizing Real Tools
+
+> “Ever wanted to launch a web server in seconds? Welcome to the world of Docker.” 🚀
+
+📦 Introduction
+
+If you're stepping into the world of Docker, one of the best first experiments you can try is running a real tool — like NGINX, the powerful, lightweight web server.
+
+In this blog, we’ll walk you through running NGINX inside a Docker container. Whether you’re a beginner or just curious about containers, this is your crash course in Dockerized deployments.
+
+🧠 Why NGINX?
+
+NGINX is widely used by companies as:
+- A high-performance web server
+- A reverse proxy for load balancing
+- A gateway in microservices architectures
+
+It’s fast, easy to use, and… perfect for container experiments!
+
+🛠️ What You’ll Need
+
+Make sure Docker is installed and running.
+
+To verify, run:
+    docker --version
+
+🏗️ Step-by-Step: Running NGINX in Docker
+
+🧱 Step 1: Pull the NGINX Image
+    docker pull nginx
+
+⚙️ Step 2: Start the NGINX Container
+    docker run --name my-nginx -p 8080:80 -d nginx
+
+Explanation:
+- --name my-nginx: gives your container a name
+- -p 8080:80: maps your local port 8080 to container port 80
+- -d: runs the container in detached mode
+
+🌐 Step 3: Access the Web Page
+    http://localhost:8080
+
+You’ll see the default NGINX welcome page. You’ve just launched a web server — inside Docker!
+
+🔍 Step 4: Inspect the Container
+List running containers:
+    docker ps
+
+See logs from NGINX:
+    docker logs my-nginx
+
+Stop the container:
+    docker stop my-nginx
+
+🧹 Step 5: Clean Up
+Remove the container:
+    docker rm my-nginx
+
+(Optional) Remove the image:
+    docker rmi nginx
+
+🎯 What You’ve Learned
+
+By running NGINX in Docker, you've learned:
+- How to pull and run container images
+- Port mapping and container naming
+- How Docker encapsulates real software
+- Accessing services inside containers
+
+🧪 Want to Try More Tools?
+
+Tool     | Docker Command
+---------|-----------------------------
+Python   | docker run -it python
+MySQL    | docker run -e MYSQL_ROOT_PASSWORD=my-secret -d mysql
+Redis    | docker run -d redis
+Node.js  | docker run -it node
+Jenkins  | docker run -p 8080:8080 -p 50000:50000 jenkins/jenkins
+
+🚀 Final Thoughts
+
+With just a few lines, you've containerized a real web server. That’s the Docker magic — quick, reproducible, and powerful.
+
+So next time someone says “containers are hard,” just send them your own NGINX-in-Docker demo. 😉
