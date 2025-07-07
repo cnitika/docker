@@ -1,0 +1,79 @@
+⚙️ Running `systemctl` in Docker: The Systemd Saga
+
+> “Why won’t `systemctl` work inside my Docker container?”  
+> — Every DevOps newbie at least once 😅
+
+📦 Introduction: The Problem
+
+You’ve built a Linux container. You try to run:
+
+    systemctl restart apache2
+
+And Docker shouts back:
+    System has not been booted with systemd as init system (PID 1). Can't operate.
+
+Wait… what?
+
+🧠 Why `systemctl` Doesn’t Work Out-of-the-Box in Docker
+
+Docker containers don’t boot a full Linux OS like a VM. They run a single process (PID 1). And systemd is an init system — it’s not PID 1 in Docker by default.
+
+So, if you want to use `systemctl`, you need to run systemd as the main process inside the container. But that needs special setup.
+
+🚧 The Real-World Use Case
+
+Why would you need `systemctl` in Docker?
+- To simulate full Linux behavior (for testing)
+- To run services managed by systemd (e.g., Apache, MariaDB)
+- For teaching Linux system administration inside a containerized lab
+
+🛠️ Method: Run Systemd in a Docker Container (Clean Way)
+
+✅ Step 1: Create a Dockerfile Based on Ubuntu
+
+    FROM ubuntu:20.04
+    ENV container docker
+
+    RUN apt-get update && \\
+        apt-get install -y systemd systemd-sysv && \\
+        apt-get clean && \\
+        rm -rf /var/lib/apt/lists/*
+
+    STOPSIGNAL SIGRTMIN+3
+    CMD ["/sbin/init"]
+
+✅ Step 2: Build the Image
+
+    docker build -t ubuntu-systemd .
+
+✅ Step 3: Run the Container with Privileged Mode
+
+    docker run --privileged --name sysbox -v /sys/fs/cgroup:/sys/fs/cgroup:ro -d ubuntu-systemd
+
+✅ Step 4: Access the Container and Use `systemctl`
+
+    docker exec -it sysbox bash
+
+Inside the container:
+
+    systemctl status
+    systemctl restart cron
+
+🎉 Boom! `systemctl` works inside Docker!
+
+🧹 Cleanup
+
+    docker stop sysbox
+    docker rm sysbox
+
+📓 Important Notes
+
+| Tip | Explanation |
+|-----|-------------|
+| 🛡️ Use privileged containers only in test/dev environments |
+| ⚙️ Systemd requires proper cgroup mounts and PID 1 control |
+| 🧪 Use systemd-enabled containers for lab/test/VM-like cases |
+
+🧠 Final Thoughts
+
+Docker wasn’t built to run full init systems — but with the right flags, you can make it work. This is especially useful for simulating full Linux behavior, teaching sysadmin concepts, or testing service behaviors in a safe space.
